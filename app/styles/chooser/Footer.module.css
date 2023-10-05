@@ -1,0 +1,16 @@
+.footer {
+    background: var(--dark);
+    width: calc(100% - 4rem);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 2rem;
+    margin-left: 2rem;
+    border-radius: 20px 20px 0 0;
+}
+
+.footer .controls {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}

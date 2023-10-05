@@ -1,0 +1,75 @@
+.grid {
+    height: 100%;
+    padding-bottom: 1rem;
+}
+
+.grid a {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.intro {
+    background-color: var(--secondary);
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.track {
+    padding: 1rem;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.track::before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    filter: blur(100px);
+
+    background: var(--background);
+    background-size: 100% 100%;
+    backdrop-filter: blur(10px);
+}
+
+.card {
+    padding: 1rem;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+}
+
+.card .icon {
+    position: absolute;
+    z-index: 0;
+    right: 0;
+    top: 0;
+    mix-blend-mode: soft-light;
+}
+
+.card .content {
+    z-index: 1;
+}
+
+.popular {
+    background: #eb5e28;
+}
+
+.recommended {
+    background: #3a86ff;
+}
+
+.top {
+    background: #82bd24;
+}
+
+.history {
+    background: #9d28eb;
+}

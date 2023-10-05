@@ -1,0 +1,17 @@
+.lyricCountdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 25px;
+    background: #33333381;
+    backdrop-filter: blur(10px);
+    height: 50px;
+    width: 50px;
+    margin-top: 10px;
+    font-size: 30px;
+    font-weight: bold;
+}

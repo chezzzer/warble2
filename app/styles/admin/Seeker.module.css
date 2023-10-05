@@ -1,0 +1,18 @@
+.lyrics {
+    height: 500px;
+    overflow: auto;
+    background: var(--background);
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.lyric:hover {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.lyric.active {
+    font-weight: bold;
+    color: var(--primary)
+}

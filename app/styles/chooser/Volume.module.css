@@ -1,0 +1,29 @@
+.volume {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 1rem;
+}
+
+.volume input {
+    width: 250px !important;
+}
+
+.volume input[type=range]::-webkit-slider-thumb {
+    background-color: var(--primary);
+    height: 50px;
+    width: 50px;
+    margin-top: -15px;
+}
+
+.volume input[type=range]::-webkit-slider-thumb:active {
+    background-color: var(--primary);
+    height: 50px;
+    width: 50px;
+    margin-top: -15px;
+}
+
+.volume input[type=range]::-webkit-slider-runnable-track {
+    height: 20px;
+    background-color: var(--secondary);
+}

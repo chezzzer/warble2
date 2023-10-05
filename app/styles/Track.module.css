@@ -1,0 +1,7 @@
+.track {
+    line-height: 1.2em;
+    color: #fff;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}

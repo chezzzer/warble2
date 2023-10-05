@@ -1,0 +1,27 @@
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem;
+}
+
+.header .logo {
+    margin: 0;
+}
+
+.header .logo a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: 700;
+}
+
+.header header {
+    display: flex;
+    gap: 2rem;
+}
+
+.header header a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: 700;
+}

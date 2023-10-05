@@ -1,0 +1,53 @@
+.lyrics {
+    padding: 50vh 0;
+    height: 100vh;
+    overflow-y: auto;
+    mask: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 10%, rgba(0,0,0,1) 35%, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 90%, rgba(0,0,0,0) 100%);
+    scrollbar-width: none;
+    pointer-events: none;
+}
+
+.lyrics::-webkit-scrollbar {
+    display: none;
+}
+
+.lyric {
+    transition: all .5s;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-size: 70px;
+    opacity: .25;
+    margin-bottom: 80px;
+    font-weight: 500;
+}
+
+.previous {
+    z-index: 1;
+}
+
+.current {
+    opacity: 1;
+    z-index: 1;
+
+}
+
+.next {
+    z-index: 1;
+    opacity: .5;
+    display: flex;
+}
+
+.word {
+    transition: all var(--timing) linear;
+    -webkit-text-fill-color: transparent;
+    background: -webkit-linear-gradient(0deg, rgb(255, 255, 255) 50%, rgba(255,255,255,.5) 50%, rgba(255,255,255,.5) 100%);
+    background-size: 200%;
+    background-position: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.word.activeWord {
+    background-position: 0%;
+}

@@ -1,0 +1,11 @@
+.volume {
+    margin-top: .5rem;
+}
+
+.volume input {
+    width: 100% !important;
+}
+
+.volume input[type=range]::-webkit-slider-runnable-track {
+    background-color: var(--dark);
+}

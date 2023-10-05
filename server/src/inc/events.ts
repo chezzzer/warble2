@@ -1,8 +1,8 @@
 import { EventEmitter } from "events";
-import { setClient } from "./spotify.js";
+import { ClientError } from "./ClientError";
 
 export const events = new EventEmitter();
 
-events.on("client", (client) => {
-    setClient(client)
-})
+export function sendClientError(error: ClientError) {
+    events.emit("clientError", error.error, error.description);
+}

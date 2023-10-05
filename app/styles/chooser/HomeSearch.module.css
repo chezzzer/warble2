@@ -1,0 +1,42 @@
+.searchInput {
+    position: relative;
+}
+
+.searchInput input {
+    background-color: var(--secondary) !important;
+    border: none;
+    color: #fff;
+    width: 100%;
+}
+
+.searchInput input:focus {
+    outline: none !important;
+}
+.searchInput::before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50%;
+    background: var(--dark);
+}
+
+
+.tracks {
+    background: var(--dark);
+    height: 100%;
+    border-radius: 0 0 10px 10px;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.status {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}

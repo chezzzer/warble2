@@ -1,8 +1,59 @@
+* {
+    --text: #fffcf2;
+    --background: #252422;
+    --dark: #1b1a19;
+    --secondary: #33322f;
+    --primary: #ff7f51;
+    --accent: #84a59d;
+}
+
 body {
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px;
-    margin: 0;
-    padding: 0;
-    background-color: #000;
-    color: #fff;
+    background: var(--background) !important;
+    color: var(--text) !important;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.card {
+    background: var(--secondary) !important;
+}
+
+.pointer-events-none {
+    pointer-events: none;
+}
+
+.truncate {
+    text-overflow: ellipsis;
+}
+
+.spinning {
+    animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+::-webkit-scrollbar {
+    width: 20px; /* Mostly for vertical scrollbars */
+    height: 20px; /* Mostly for horizontal scrollbars */
+}
+::-webkit-scrollbar-thumb {
+    /* Foreground */
+    background: var(--primary);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-track {
+    /* Background */
+    background: var(--secondary);
+    border-radius: 5px;
+    margin: 1rem 0;
 }
