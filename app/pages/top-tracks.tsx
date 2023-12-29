@@ -4,22 +4,27 @@ import { config } from "@/lib/config";
 
 import type { QueueTrack } from "../../server/src/inc/spotify";
 import QueueableTrack from "@/components/chooser/QueueableTrack";
+import { ClientError } from "../../server/src/inc/ClientError";
 
 type TopTracksProps = {
     tracks: QueueTrack[];
 };
 
 export async function getStaticProps() {
-    const tracks = await fetch(`http://${config.server_host}/tracks/top`);
+    try {
+        const tracks = await fetch(`http://${config.server_host}/tracks/top`);
 
-    const data = await tracks.json();
+        const data = await tracks.json();
 
-    return {
-        props: {
-            tracks: data,
-        },
-        revalidate: 3600,
-    };
+        return {
+            props: {
+                tracks: data,
+            },
+            revalidate: 3600,
+        };
+    } catch (_) {
+        throw new Error("WARBLE: Please run the server to build this page.");
+    }
 }
 
 export default function TopTracks({ tracks }: TopTracksProps) {

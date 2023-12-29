@@ -51,6 +51,7 @@ export async function getLyricsFromISRC(isrc: string): Promise<WarbleLyrics> {
             lyrics = await fetchLyricsFromISRC(isrc, "track.subtitles.get");
         } catch (e: any) {
             console.log(e);
+            lyrics = null;
             throw e;
         }
     }
@@ -82,18 +83,19 @@ export async function fetchLyricsFromISRC(
 
     const json = await res.json();
 
-    if (!json.message.body || (!json.message.body.subtitle_list && !json.message.body.richsync)) {
-        throw new ClientError(
-            "WARBLE_NOTFOUND",
-            "No lyrics found for this track."
-        );
+    if (json.message.header.status_code == 404) {
+        throw new ClientError("WARBLE_404", "No Lyrics for this one ☹️");
     }
 
     if (json.message.header.status_code != 200) {
-        throw new ClientError(
-            "WARBLE_NOTFOUND",
-            "No lyrics found for this track."
-        );
+        throw new ClientError("WARBLE_NOT_200", "No Lyrics for this one ☹️");
+    }
+
+    if (
+        !json.message.body ||
+        (!json.message.body.subtitle_list && !json.message.body.richsync)
+    ) {
+        throw new ClientError("WARBLE_NULL", "No Lyrics for this one ☹️");
     }
 
     if (type == "track.richsync.get") {
@@ -108,8 +110,8 @@ export async function fetchLyricsFromISRC(
 
         if (!richsync.richsync_body) {
             throw new ClientError(
-                "WARBLE_NOTFOUND",
-                "No lyrics found for this track."
+                "WARBLE_BODY_NOTFOUND",
+                "No Lyrics for this one ☹️"
             );
         }
 
@@ -121,6 +123,13 @@ export async function fetchLyricsFromISRC(
             lyric: lyric.l.map((l: any) => ({ text: l.c, offset: l.o })),
             text: lyric.x,
         }));
+
+        body.unshift({
+            start: 0,
+            end: body[0].start,
+            lyric: [],
+            text: " ",
+        });
 
         const lyric = {
             list: body,
@@ -145,12 +154,22 @@ export async function fetchLyricsFromISRC(
 
         if (!subtitle.subtitle_body) {
             throw new ClientError(
-                "WARBLE_NOTFOUND",
-                "No lyrics found for this track."
+                "WARBLE_BODY_NOTFOUND",
+                "No Lyrics for this one ☹️"
             );
         }
 
         const body = JSON.parse(subtitle.subtitle_body);
+
+        body.unshift({
+            text: " ",
+            time: {
+                total: 0,
+                minutes: 0,
+                seconds: 0,
+                hundredths: 0,
+            },
+        });
 
         const lyric = {
             list: body,

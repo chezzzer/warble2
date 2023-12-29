@@ -2,18 +2,19 @@ import { RecommendationQuery } from "spotify-api.js";
 
 type Config = {
     explicit: boolean;
-    popular_playlist: string;
+    best_playlist: string;
     top_playlist: string;
-    recommendation_settings: RecommendationQuery
+    recommendation_genres: string[];
 }
 
 export const CONFIG = {
     explicit: true,
-    popular_playlist: "37i9dQZF1DX5I05jXm1F2M",
+    best_playlist: "37i9dQZF1DX5I05jXm1F2M",
     top_playlist: "37i9dQZEVXbMDoHDwVN2tF",
-    recommendation_settings: {
-        limit: 100,
-        seed_artists: "3PhoLpVuITZKcymswpck5b",
-
-    }
+    recommendation_genres: [
+        "rock",
+        "blues",
+        "rock-n-roll",
+        "dance"
+    ]
 } as Config

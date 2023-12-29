@@ -4,20 +4,24 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: #000 !important;
     color: #fff;
 }
 
 .lyrics::before {
     position: absolute;
-    left:0;
-    top:0;
+    left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
     filter: blur(10px);
-    opacity: .1;
+    z-index: -1;
     content: "";
-    background: var(--image);
+    background: linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.8) 0%,
+            rgba(0, 0, 0, 0.8) 100%
+        ),
+        var(--image);
     background-size: cover;
     background-position: center;
 }
@@ -25,22 +29,21 @@
 .previous {
     z-index: 1;
     font-size: 40px;
-    opacity: .5;
-    margin:0;
+    opacity: 0.5;
+    margin: 0;
 }
 
 .current {
     z-index: 1;
     margin: 20px 0;
     font-size: 80px;
-
 }
 
 .next {
-    margin:0;
+    margin: 0;
     z-index: 1;
     font-size: 60px;
-    opacity: .8;
+    opacity: 0.8;
 }
 
 .progress {
@@ -70,16 +73,16 @@
     position: fixed;
     bottom: 30px;
     right: 25px;
-    opacity: .5;
+    opacity: 0.5;
     max-width: 600px;
     text-align: right;
 }
 
 .word {
-    opacity: .75;
+    opacity: 0.75;
     position: relative;
     z-index: 1;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
 }
 
 .word::after {

@@ -1,0 +1,30 @@
+.container {
+    display: grid;
+    gap: .75rem;
+    align-items: center;
+    grid-template-columns: 50px 4fr .5fr;
+}
+
+.container .info {
+    overflow: hidden;
+}
+
+.container .name {
+    font-size: 17px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.container .artist {
+    font-size: 13px;
+    opacity: .75;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.container .name::-webkit-scrollbar {
+    height: 0px !important;
+}

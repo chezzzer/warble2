@@ -4,27 +4,52 @@ import { config } from "@/lib/config";
 
 import type { QueueTrack } from "../../server/src/inc/spotify";
 import QueueableTrack from "@/components/chooser/QueueableTrack";
+import { ClientError } from "../../server/src/inc/ClientError";
+import { useEffect, useState } from "react";
+import { X } from "@phosphor-icons/react";
+import { useClient } from "@/lib/ClientContext";
+import { WarbleTrack } from "../../server/src/inc/context";
+import { Spinner } from "react-bootstrap";
 
-type RecommendedTracksProps = {
-    tracks: QueueTrack[];
-};
+export default function RecommendedTracks() {
+    const [searchGenres, setGenres] = useState<string[]>([]);
+    const [tracks, setTracks] = useState<QueueTrack[]>([]);
+    const [loading, setLoading] = useState(false);
 
-export async function getStaticProps() {
-    const tracks = await fetch(
-        `http://${config.server_host}/tracks/recommended`
-    );
+    const { genres } = useClient();
 
-    const data = await tracks.json();
+    useEffect(() => {
+        setLoading(true);
 
-    return {
-        props: {
-            tracks: data,
-        },
-        revalidate: 3600,
+        fetch(
+            `http://${
+                config.server_host
+            }/tracks/recommended?genres=${searchGenres.join(",")}`
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                setTracks(data.tracks);
+                setLoading(false);
+            });
+    }, [searchGenres]);
+
+    const addGenre = (genre: string) => {
+        if (searchGenres.includes(genre)) return;
+        setGenres([...searchGenres, genre]);
     };
-}
 
-export default function RecommendedTracks({ tracks }: RecommendedTracksProps) {
+    const removeGenre = (genre: string) => {
+        setGenres(searchGenres.filter((g) => g !== genre));
+    };
+
+    const formatGenreName = (genre: string) => {
+        return genre
+            .replaceAll("-", " ")
+            .split(" ")
+            .map((word) => word[0].toUpperCase() + word.slice(1))
+            .join(" ");
+    }
+
     return (
         <>
             <Head>
@@ -43,12 +68,54 @@ export default function RecommendedTracks({ tracks }: RecommendedTracksProps) {
                     <div className="py-5 text-center">
                         <h1>Recommended Tracks</h1>
                     </div>
-                    <div className="row me-2">
-                        {tracks.map((track) => (
-                            <div className="col-sm-4 mb-4" key={track.uri}>
-                                <QueueableTrack track={track} />
-                            </div>
+                    <div className="d-flex gap-3 mb-3">
+                        <select
+                            onChange={(e) => {
+                                addGenre(
+                                    e.target.options[e.target.selectedIndex]
+                                        .value
+                                )
+                                e.target.selectedIndex = 0;
+                            }
+                            }
+                            className="form-control-plaintext text-dark bg-white rounded px-2"
+                            data-bs-theme="dark"
+                            style={{ width: 150 }}
+                        >
+                            <option value="">Filter by Genre</option>
+                            {genres &&
+                                genres.map((genre) => {
+                                    if (searchGenres.includes(genre)) return;
+                                    return (
+                                        <option className="py-3" value={genre} key={genre}>
+                                            {formatGenreName(genre)}
+                                        </option>
+                                    );
+                                })}
+                        </select>
+                        {searchGenres.map((genre) => (
+                            <button
+                                key={genre}
+                                type="button"
+                                className="btn btn-light rounded-pill"
+                                onClick={() => removeGenre(genre)}
+                            >
+                                {formatGenreName(genre)} <X />
+                            </button>
                         ))}
+                    </div>
+                    <div className="row me-2">
+                        {!loading &&
+                            tracks.map((track) => (
+                                <div className="col-sm-4 mb-4" key={track.uri}>
+                                    <QueueableTrack track={track} />
+                                </div>
+                            ))}
+                        {loading && (
+                            <h1 className="py-5 text-center">
+                                <Spinner animation="grow" />
+                            </h1>
+                        )}
                     </div>
                 </div>
             </ChooserLayout>

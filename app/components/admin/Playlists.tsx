@@ -12,11 +12,11 @@ export default function Playlists() {
             <h6>Playlists</h6>
             <div className="row">
                 <div className="col-sm-6">
-                    <h6 className="badge ps-0">TOP PLAYLIST</h6>
+                    <h6 className="badge ps-0">BEST PLAYLIST</h6>
                     <div className="d-flex gap-3 align-items-center">
                         <div>
                             <img
-                                src={playlists.popular_playlist.images[0].url}
+                                src={playlists.best_playlist.images[0].url}
                                 width={75}
                                 className="rounded"
                                 alt=""
@@ -24,7 +24,7 @@ export default function Playlists() {
                         </div>
                         <div>
                             <h5 className="mb-0">
-                                {playlists.popular_playlist.name}
+                                {playlists.best_playlist.name}
                             </h5>
                             <div>
                                 <Link
@@ -33,7 +33,7 @@ export default function Playlists() {
                                         textDecoration: "none",
                                     }}
                                     href={
-                                        playlists.popular_playlist.externalURL
+                                        playlists.best_playlist.externalURL
                                             .spotify
                                     }
                                     target="_blank"
@@ -45,7 +45,7 @@ export default function Playlists() {
                     </div>
                 </div>
                 <div className="col-sm-6">
-                    <h6 className="badge ps-0">POPULAR PLAYLIST</h6>
+                    <h6 className="badge ps-0">TOP PLAYLIST</h6>
                     <div className="d-flex gap-3 align-items-center">
                         <div>
                             <img

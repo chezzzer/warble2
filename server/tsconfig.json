@@ -5,7 +5,7 @@
         "rootDir": "./src/",
         "outDir": "./dist/",
         "strict": true,
-        "moduleResolution": "node",
+        "moduleResolution": "Node",
         "importHelpers": true,
         "experimentalDecorators": true,
         "esModuleInterop": true,

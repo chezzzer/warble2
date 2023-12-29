@@ -1,0 +1,7 @@
+procs:
+    server:
+        shell: "yarn dev"
+        cwd: "server"
+    app:
+        shell: "yarn dev"
+        cwd: "app"

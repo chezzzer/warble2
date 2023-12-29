@@ -85,7 +85,7 @@ export default function Seeker() {
             <input
                 onInput={(e) => seek(e.currentTarget.valueAsNumber)}
                 type="range"
-                value={progress}
+                value={progress ?? 0}
                 min={0}
                 max={context?.track?.duration}
             />

@@ -1,11 +1,4 @@
-import {
-    createContext,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 import type { WarbleContext } from "../../server/src/inc/context";
 import type { PropsWithChildren } from "react";
@@ -37,7 +30,7 @@ function useProviderValue() {
         }
 
         if (!context.lyrics) {
-            setError("No Lyrics for this one ☹️.");
+            setError("No Lyrics for this one ☹️");
             return;
         }
 
@@ -86,7 +79,7 @@ function useProviderValue() {
             }
 
             if (data.type == "lyricChange") {
-                if (data.data.error) return;
+                if (data.data?.error) return;
 
                 setIndex(undefined);
                 setWord(undefined);
@@ -96,10 +89,11 @@ function useProviderValue() {
 
     let timeToNext = calculateTimeToNext();
     function calculateTimeToNext(): number | undefined {
+        if (!context?.lyrics?.list) return;
         const next = context?.lyrics?.list[index! + 1];
 
         if (context?.lyrics?.type == "track.richsync.get") {
-            if (!index || !progress) return;
+            if (index == undefined || !progress) return;
 
             const nextRichsync = next as RichsyncLyric;
             if (!nextRichsync) return;
@@ -110,7 +104,7 @@ function useProviderValue() {
         }
 
         if (context?.lyrics?.type == "track.subtitles.get") {
-            if (!index || !progress) return;
+            if (index == undefined || !progress) return;
 
             const nextSubtitle = next as SubtitleLyric;
             if (!nextSubtitle) return;
@@ -135,14 +129,10 @@ function useProviderValue() {
             );
 
             const first = list[0];
-                const last = list[list.length - 1];
-            const isIntro = list.find(
-                (segment) => seconds < first.start
-            );
+            const last = list[list.length - 1];
+            const isIntro = list.find((segment) => seconds < first.start);
 
-            const isOutro = list.find(
-                (segment) => seconds > last.start
-            );
+            const isOutro = list.find((segment) => seconds > last.start);
             if (current < 0) {
                 if (isIntro) {
                     current = 0;
@@ -163,7 +153,10 @@ function useProviderValue() {
 
             const wordIndex = now.lyric.findIndex((segment, i) => {
                 const next = now.lyric[i + 1];
-                const end = next ? now.start + next?.offset : nextLyric?.start ?? now.end;
+                let end = next
+                    ? now.start + next.offset
+                    : nextLyric?.start ?? context.track?.duration! / 1000 ?? 0;
+
                 return seconds >= now.start + segment.offset && seconds <= end;
             });
 

@@ -15,7 +15,7 @@ function useProviderValue() {
     const socket = useMemo(
         () =>
             typeof window != "undefined"
-                ? new WebSocket(`ws://${config.server_host}/admin/socket`)
+                ? new WebSocket(`ws://${config.server_host}/admin/socket`, reconnect.toString())
                 : null,
         [reconnect]
     );

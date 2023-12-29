@@ -9,9 +9,17 @@ import {
 import Link from "next/link";
 import styles from "@/styles/chooser/Header.module.css";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+
+type HeaderItem = {
+    name: string;
+    icon: JSX.Element;
+    link: string;
+};
 
 export default function Header() {
     const [time, setTime] = useState<string>();
+    const router = useRouter();
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
@@ -27,6 +35,39 @@ export default function Header() {
         };
     }, []);
 
+    const items = [
+        {
+            name: "Home",
+            icon: <House weight="fill" />,
+            link: "/",
+        },
+        {
+            name: "Recommended Tracks",
+            icon: <Waveform weight="fill" />,
+            link: "/recommended-tracks",
+        },
+        {
+            name: "Best Karaoke Tracks",
+            icon: <MicrophoneStage weight="fill" />,
+            link: "/best-tracks",
+        },
+        {
+            name: "Top Tracks",
+            icon: <TrendUp weight="fill" />,
+            link: "/top-tracks",
+        },
+        {
+            name: "Track History",
+            icon: <MusicNote weight="fill" />,
+            link: "/track-history",
+        },
+        {
+            name: "Track Queue",
+            icon: <ListNumbers weight="fill" />,
+            link: "/queue",
+        },
+    ] as HeaderItem[];
+
     return (
         <div className={styles.header}>
             <h4 className={styles.logo}>
@@ -36,36 +77,18 @@ export default function Header() {
                 </Link>
             </h4>
             <header>
-                <div>
-                    <Link href="/">
-                        <House weight="fill" /> Home
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/recommended-tracks">
-                        <Waveform weight="fill" /> Recommended Tracks
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/best-tracks">
-                        <MicrophoneStage weight="fill" /> Best Karaoke Tracks
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/top-tracks">
-                        <TrendUp weight="fill" /> Top Tracks
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/track-history">
-                        <MusicNote weight="fill" /> Track History
-                    </Link>
-                </div>
-                <div>
-                    <Link href="/queue">
-                        <ListNumbers weight="fill" /> Track Queue
-                    </Link>
-                </div>
+                {items.map((item, i) => (
+                    <div
+                        className={`${styles.item} ${
+                            item.link == router.pathname ? styles.active : ""
+                        }`}
+                        key={i}
+                    >
+                        <Link href={item.link} key={item.name}>
+                            {item.icon} {item.name}
+                        </Link>
+                    </div>
+                ))}
                 <div>{time}</div>
             </header>
         </div>

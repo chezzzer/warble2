@@ -23,7 +23,7 @@ export default function LyricList() {
     }
 
     function RichSync() {
-        const current = context?.lyrics?.list[index!];
+        const current = context?.lyrics?.list![index!];
 
         if (context?.lyrics?.type == "track.subtitles.get") {
             return current?.text ? current?.text : "...";
@@ -33,13 +33,9 @@ export default function LyricList() {
         if (!current) return "...";
         return richsync.lyric.map((segment, i) => {
             if (word && i <= word) {
-                const length =
-                    (richsync.lyric[i + 1]
-                        ? richsync.lyric[i + 1].offset
-                        : richsync.end - richsync.start) - segment.offset;
                 return (
                     <span
-                        style={{["--timing" as any]: length + "s"}}
+                        key={i}
                         className={`${styles.word} ${styles.activeWord}`}
                     >
                         {segment.text}
@@ -47,32 +43,39 @@ export default function LyricList() {
                 );
             }
 
-            return <span className={styles.word}>{segment.text}</span>;
+            return (
+                <span key={i} className={styles.word}>
+                    {segment.text}
+                </span>
+            );
         });
     }
 
     return (
         <div className={styles.lyrics}>
-            {context.lyrics.list.map((lyric, i) => {
-                const current = i == index;
-                const next = i - 1 == index;
-                const previous = i + 1 == index;
-                return (
-                    <>
-                        <div
-                            className={`${styles.lyric} 
+            {context.lyrics.list &&
+                context.lyrics.list.map((lyric, i) => {
+                    const current = i == index;
+                    const next = i - 1 == index;
+                    const previous = i + 1 == index;
+                    return (
+                        <>
+                            <div
+                                className={`${styles.lyric} 
                             ${current ? styles.current : ""}
                             ${next ? styles.next : ""}
                             ${previous ? styles.previous : ""}
                             `}
-                        >
-                            {current && RichSync()}
-                            {next && <LyricCountdown countdown={timeToNext!} />}
-                            {!current && (lyric.text ? lyric.text : "...")}
-                        </div>
-                    </>
-                );
-            })}
+                            >
+                                {current && RichSync()}
+                                {next && (
+                                    <LyricCountdown countdown={timeToNext!} />
+                                )}
+                                {!current && (lyric.text ? lyric.text : "...")}
+                            </div>
+                        </>
+                    );
+                })}
         </div>
     );
 }

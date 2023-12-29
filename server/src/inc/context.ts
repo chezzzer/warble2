@@ -12,13 +12,14 @@ export interface WarbleContext {
     volume: number | null;
     queue: Track[];
     sync: number;
+    display: boolean;
 }
 
 export interface WarbleLyrics {
-    list: RichsyncLyric[] | SubtitleLyric[];
-    type: LyricType;
-    copyright: string;
-    error?: ClientError
+    list?: RichsyncLyric[] | SubtitleLyric[];
+    type?: LyricType;
+    copyright?: string;
+    error?: ClientError;
 }
 
 export let context: WarbleContext = {
@@ -28,5 +29,6 @@ export let context: WarbleContext = {
     lyrics: null,
     volume: null,
     queue: [],
-    sync: 0
+    sync: 0,
+    display: false,
 };

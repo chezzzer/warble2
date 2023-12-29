@@ -1,5 +1,7 @@
 import AdminLayout from "@/components/admin/AdminLayout";
 import Controls from "@/components/admin/Controls";
+import DisplayMode from "@/components/admin/DisplayMode";
+import LyricType from "@/components/admin/LyricType";
 import Playlists from "@/components/admin/Playlists";
 import Queue from "@/components/admin/Queue";
 import Seeker from "@/components/admin/Seeker";
@@ -34,6 +36,12 @@ export default function Admin() {
                             </div>
                             <div className="mb-3">
                                 <Playlists />
+                            </div>
+                            <div className="mb-3">
+                                <LyricType />
+                            </div>
+                            <div className="mb-3">
+                                <DisplayMode />
                             </div>
                         </div>
                         <div className="col-sm-6">

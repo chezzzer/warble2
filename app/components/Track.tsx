@@ -24,7 +24,7 @@ export default function Track({ track, progress }: TrackProps) {
                 <div className="mb-1">
                     {track.artists.map((a) => a.name).join(", ")}
                 </div>
-                {progress && (
+                {progress && track.duration && (
                     <small className="opacity-75">
                         {formatSeconds(progress / 1000)} /{" "}
                         {formatSeconds(track.duration / 1000)}

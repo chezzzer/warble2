@@ -7,13 +7,11 @@ import Track from "../Track";
 import { useEffect } from "react";
 import { useAnimate } from "framer-motion";
 import LyricList from "./LyricList";
+import { useClient } from "@/lib/ClientContext";
 
 export default function LyricLayout() {
     const { error, index, timeToNext, context, progress, word } = useLyric();
-
-    if (error) {
-        return <LyricError error={error} />;
-    }
+    const { display } = useClient();
 
     if (index! < 0) {
         return <LyricError error="Waiting for lyrics..." />;
@@ -46,7 +44,9 @@ export default function LyricLayout() {
                 </div>
 
                 <div
-                    className={styles.lyrics}
+                    className={`${styles.lyrics} ${
+                        display ? styles.display : ""
+                    }`}
                     style={{
                         ["--image" as any]: `url("${context?.track?.album?.images[0].url}")`,
                     }}
@@ -67,7 +67,8 @@ export default function LyricLayout() {
                             )}
                         </div>
                     </div> */}
-                    <LyricList />
+                    {!error && !display && <LyricList />}
+                    {error && !display && <LyricError error={error} />}
                 </div>
             </main>
         </>

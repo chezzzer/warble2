@@ -64,7 +64,10 @@ export async function trackPlayback() {
             context.track = playback.item as Track;
             context.sync = 0;
 
-            if (context.queue.length && context.queue[0].id == playback.item.id) {
+            if (
+                context.queue.length &&
+                context.queue[0].id == playback.item.id
+            ) {
                 context.queue.shift();
             }
         }
@@ -79,7 +82,7 @@ events.on("trackChange", async (track: Track) => {
     if (!isrc) {
         sendClientError(
             new ClientError(
-                "No ISRC Attached",
+                "WARBLE_NOISRC",
                 "This track does not have an ISRC attached to it, meaning we cannot retrieve the lyrics."
             )
         );
@@ -89,8 +92,7 @@ events.on("trackChange", async (track: Track) => {
     try {
         context.lyrics = await getLyricsFromISRC(isrc);
     } catch (e: any) {
-        if (!context.lyrics) context.lyrics = {} as any;
-        context.lyrics!.error = e;
+        context.lyrics = { error: e };
         sendClientError(e);
     }
 
@@ -140,7 +142,7 @@ app.get("/callback", async (req, res) => {
 
         setInterval(async () => {
             await client.refreshFromMeta();
-        }, 3000 * 1000)
+        }, 3000 * 1000);
 
         res.redirect(process.env.APP_URL!);
     } catch (e: any) {
@@ -161,6 +163,28 @@ app.get("/login", async (req, res) => {
             })
     );
 });
+
+export function convertTracks(tracks: Track[]): QueueTrack[] {
+    const filteredTracks = tracks.filter((track) => {
+        if (CONFIG.explicit) return true;
+
+        return track.explicit === false;
+    });
+
+    const trimmedTracks = filteredTracks.map((track) => {
+        const isrc = track.externalID?.isrc;
+
+        return {
+            uri: track.uri,
+            isrc: isrc!,
+            name: track.name,
+            artists: track.artists.map((a) => a.name).join(", "),
+            image: track.album?.images[2].url ?? "",
+        };
+    });
+
+    return trimmedTracks;
+}
 
 app.post("/queue", async (req, res) => {
     if (!client) return res.status(500).json({ error: "No client" });
@@ -219,36 +243,14 @@ app.post("/search", async (req, res) => {
     }
 });
 
-export function convertTracks(tracks: Track[]) {
-    const filteredTracks = tracks.filter((track) => {
-        if (CONFIG.explicit) return true;
-
-        return track.explicit === false;
-    });
-
-    const trimmedTracks = filteredTracks.map((track) => {
-        const isrc = track.externalID?.isrc;
-
-        return {
-            uri: track.uri,
-            isrc: isrc,
-            name: track.name,
-            artists: track.artists.map((a) => a.name).join(", "),
-            image: track.album?.images[2].url,
-        };
-    });
-
-    return trimmedTracks;
-}
-
 app.get("/tracks/best", async (req, res) => {
     if (!client) return res.status(500).json({ error: "No client" });
 
-    if (!CONFIG.popular_playlist) {
+    if (!CONFIG.best_playlist) {
         return res.status(500).json({ error: "No popular playlist" });
     }
 
-    const tracks = await client.playlists.getTracks(CONFIG.popular_playlist);
+    const tracks = await client.playlists.getTracks(CONFIG.best_playlist);
 
     const items = tracks.map((item) => item.track as Track);
 
@@ -262,16 +264,30 @@ app.get("/tracks/best", async (req, res) => {
 app.get("/tracks/recommended", async (req, res) => {
     if (!client) return res.status(500).json({ error: "No client" });
 
-    const tracks = await client.browse.getRecommendations(
-        CONFIG.recommendation_settings
-    );
+    const genres = req.query.genres
+        ? req.query.genres
+        : CONFIG.recommendation_genres.join(",");
+
+    const tracks = await client.browse.getRecommendations({
+        limit: 99,
+        seed_genres: genres as string,
+        seed_artists: "",
+        seed_tracks: "",
+    });
+
     const items = tracks?.tracks.map((item) => item as Track);
 
     if (!items) {
-        return res.json([]);
+        return res.json({
+            genres,
+            tracks: [],
+        });
     }
 
-    res.json(convertTracks(items));
+    res.json({
+        genres,
+        tracks: convertTracks(items),
+    });
 });
 
 app.get("/tracks/history", async (req, res) => {

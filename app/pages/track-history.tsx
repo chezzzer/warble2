@@ -4,22 +4,29 @@ import { config } from "@/lib/config";
 
 import type { QueueTrack } from "../../server/src/inc/spotify";
 import QueueableTrack from "@/components/chooser/QueueableTrack";
+import { ClientError } from "../../server/src/inc/ClientError";
 
 type TrackHistoryProps = {
     tracks: QueueTrack[];
 };
 
 export async function getStaticProps() {
-    const tracks = await fetch(`http://${config.server_host}/tracks/history`);
+    try {
+        const tracks = await fetch(
+            `http://${config.server_host}/tracks/history`
+        );
 
-    const data = await tracks.json();
+        const data = await tracks.json();
 
-    return {
-        props: {
-            tracks: data,
-        },
-        revalidate: 30,
-    };
+        return {
+            props: {
+                tracks: data,
+            },
+            revalidate: 30,
+        };
+    } catch (_) {
+        throw new Error("WARBLE: Please run the server to build this page.");
+    }
 }
 
 export default function TrackHistory({ tracks }: TrackHistoryProps) {

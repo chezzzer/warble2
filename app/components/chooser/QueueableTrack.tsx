@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import Track from "../Track";
 import QueueTrackDisplay from "./QueueTrackDisplay";
+import styles from "@/styles/chooser/QueueableTrack.module.css";
 
 type QueueableTrackProps = {
     track: QueueTrack;
@@ -22,7 +23,7 @@ export default function QueueableTrack({ track }: QueueableTrackProps) {
         if (queue.map((t) => t.uri).includes(track.uri)) {
             setQueued(true);
         }
-    }, [queue]);
+    }, [queue, track]);
 
     const queueTrack = async () => {
         setQueueing(true);
@@ -63,6 +64,19 @@ export default function QueueableTrack({ track }: QueueableTrackProps) {
         setQueued(true);
     };
 
+    useEffect(() => {
+        const e = document.querySelector(`.${styles.info}`);
+
+        if (!e) return;
+
+        console.log(e.scrollWidth);
+
+        e.scrollTo({
+            left: 10000000000000000000000,
+            behavior: "smooth",
+        });
+    }, []);
+
     return (
         <div
             className={`card card-body pointer
@@ -71,26 +85,21 @@ export default function QueueableTrack({ track }: QueueableTrackProps) {
             `}
             onClick={queueTrack}
         >
-            <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center gap-3">
-                    <div>
-                        <img
-                            src={track.image}
-                            width={50}
-                            alt=""
-                            className="rounded"
-                        />
-                    </div>
-                    <div>
-                        <div style={{ width: 250 }} className="overflow-hidden">
-                            <h5 className="mb-0 truncate text-nowrap">
-                                {track.name}
-                            </h5>
-                        </div>
-                        <div>{track.artists}</div>
-                    </div>
-                </div>
+            <div className={styles.container}>
                 <div>
+                    <img
+                        src={track.image}
+                        width="100%"
+                        style={{aspectRatio: 1/1, objectFit: "cover"}}
+                        alt=""
+                        className="rounded"
+                    />
+                </div>
+                <div className={styles.info}>
+                    <div className={styles.name}>{track.name}</div>
+                    <div className={styles.artist}>{track.artists}</div>
+                </div>
+                <div className="text-center">
                     {!queued && !queueing && (
                         <PlusCircle size={32} weight="fill" />
                     )}

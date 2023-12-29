@@ -6,11 +6,14 @@ import { config } from "./config";
 
 function useProviderValue() {
     const [reconnect, setReconnect] = useState(0);
-    
-    let socket = useMemo(
+
+    let socket: WebSocket | null = useMemo(
         () =>
             typeof window != "undefined"
-                ? new WebSocket(`ws://${config.server_host}/socket`)
+                ? new WebSocket(
+                      `ws://${config.server_host}/socket`,
+                      reconnect.toString()
+                  )
                 : null,
         [reconnect]
     );
@@ -19,10 +22,8 @@ function useProviderValue() {
 
     const [queue, setQueue] = useState<WarbleTrack[]>([]);
     const [progress, setProgress] = useState<number>();
-
-    useEffect(() => {
-        console.log(queue);
-    }, [queue])
+    const [genres, setGenres] = useState<string[]>();
+    const [display, setDisplay] = useState<boolean>();
 
     useEffect(() => {
         if (!socket) return;
@@ -34,6 +35,7 @@ function useProviderValue() {
                 setContext(data.data as unknown as WarbleContext);
                 setProgress(data.data.progress);
                 setQueue(data.data.queue);
+                setDisplay(data.data.display);
             }
 
             if (data.type == "progress") {
@@ -43,6 +45,14 @@ function useProviderValue() {
             if (data.type == "queue") {
                 setQueue(data.data);
             }
+
+            if (data.type == "genres") {
+                setGenres(data.data);
+            }
+
+            if (data.type == "display") {
+                setDisplay(data.data);
+            }
         });
 
         socket.addEventListener("close", () => {
@@ -50,7 +60,7 @@ function useProviderValue() {
             setContext(null);
             setTimeout(() => {
                 setReconnect(reconnect + 1);
-            }, 1000)
+            }, 1000);
         });
 
         socket.addEventListener("error", (error) => {
@@ -66,14 +76,16 @@ function useProviderValue() {
         if (!socket) return;
 
         socket.send(JSON.stringify({ action, data }));
-    }
+    };
 
     return {
         socket,
         context,
         progress,
         queue,
-        sendAction
+        genres,
+        sendAction,
+        display,
     };
 }
 

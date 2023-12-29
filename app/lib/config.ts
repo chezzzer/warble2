@@ -1,4 +1,4 @@
 export const config = {
-    server_host: "158.140.247.161:8000",
-    screen_timeout: 60
-}
+    server_host: "127.0.0.1:8000",
+    screen_timeout: 0,
+};
